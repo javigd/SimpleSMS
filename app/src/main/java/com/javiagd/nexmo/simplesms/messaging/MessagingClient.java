@@ -2,6 +2,7 @@ package com.javiagd.nexmo.simplesms.messaging;
 
 import com.javiagd.nexmo.simplesms.exceptions.SimpleSmsException;
 import com.javiagd.nexmo.simplesms.models.DeliveryReceipt;
+import com.javiagd.nexmo.simplesms.models.Message;
 import com.javiagd.nexmo.simplesms.models.Response;
 
 /**
@@ -11,12 +12,10 @@ public interface MessagingClient {
 
     /**
      * Send a text message from a sender to a specified receptor
-     * @param sender
-     * @param receptor
-     * @param text
+     * @param message
      * @return the resulting Response from the messaging Client
      */
-    public Response sendMessage(String sender, String receptor, String text) throws SimpleSmsException;
+    public Response sendMessage(Message message) throws SimpleSmsException;
 
     /**
      * Get the delivery receipt of the latest sendMessage operation

@@ -1,10 +1,9 @@
 package com.javiagd.nexmo.simplesms.messaging;
 
+import com.javiagd.nexmo.simplesms.models.Message;
 import com.javiagd.nexmo.simplesms.models.Response;
 
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 public class NexmoMessagingClientTest extends TestCase {
 
@@ -23,7 +22,7 @@ public class NexmoMessagingClientTest extends TestCase {
         String recipient = "34630978821";
         String messageBody = "[SimpleSMS] This is a unit test.";
 
-        Response response = client.sendMessage(sender, recipient, messageBody);
+        Response response = client.sendMessage(new Message(sender, recipient, messageBody));
 
         assertNotNull(response);
     }

@@ -1,5 +1,7 @@
 package com.javiagd.nexmo.simplesms.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -7,15 +9,22 @@ import java.util.List;
  */
 public class Response {
 
+    @JsonProperty("message-count")
     private String messageCount;
-    private List<String> messages;
+    private List messages;
     private String status;
+    @JsonProperty("message-id")
     private String messageId;
+    @JsonProperty("to")
     private String destination;
+    @JsonProperty("client-ref")
     private String clientReference;
+    @JsonProperty("remaining-balance")
     private String remainingBalance;
+    @JsonProperty("message-price")
     private String messagePrice;
     private String network;
+    @JsonProperty("error-text")
     private String errorText;
 
     public Response() {
@@ -37,7 +46,6 @@ public class Response {
         this.errorText = errorText;
     }
 
-
     public String getMessageCount() {
         return messageCount;
     }
@@ -46,11 +54,11 @@ public class Response {
         this.messageCount = messageCount;
     }
 
-    public List<String> getMessages() {
+    public List getMessages() {
         return messages;
     }
 
-    public void setMessages(List<String> messages) {
+    public void setMessages(List messages) {
         this.messages = messages;
     }
 
@@ -116,5 +124,13 @@ public class Response {
 
     public void setErrorText(String errorText) {
         this.errorText = errorText;
+    }
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "messageCount='" + messageCount + '\'' +
+                ", messages=" + messages +
+                '}';
     }
 }
