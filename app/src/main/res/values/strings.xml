@@ -3,4 +3,10 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="to_head">To</string>
+    <string name="from_head">From</string>
+    <string name="message_head">Message</string>
+    <string name="send_head">Send</string>
+    <string name="response_head">Response</string>
+
 </resources>
