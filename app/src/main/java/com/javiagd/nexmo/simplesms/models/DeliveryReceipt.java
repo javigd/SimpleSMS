@@ -1,19 +1,25 @@
 package com.javiagd.nexmo.simplesms.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by javigd on 15/04/15.
  */
 public class DeliveryReceipt {
 
     private String destination;
+    @JsonProperty("network-code")
     private String networkCode;
     private String messageId;
     private String msisdn;
     private String status;
+    @JsonProperty("err-code")
     private String errorCode;
     private String price;
     private String scts;
+    @JsonProperty("message-timestamp")
     private String messageTimestamp;
+    @JsonProperty("client-ref")
     private String clientRef;
 
     public DeliveryReceipt() {
@@ -24,6 +30,7 @@ public class DeliveryReceipt {
                            String status, String errorCode, String price, String scts,
                            String messageTimestamp, String clientRef) {
         this.destination = destination;
+
         this.networkCode = networkCode;
         this.messageId = messageId;
         this.msisdn = msisdn;

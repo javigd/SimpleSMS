@@ -9,10 +9,12 @@ import com.javiagd.nexmo.simplesms.models.Response;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by javigd on 15/04/15.
@@ -41,7 +43,7 @@ public class NexmoMessagingClient implements MessagingClient {
     @Override
     public Response sendMessage(Message message) throws SimpleSmsException {
         Response response = null;
-        String requestUrl = buildRequestUrl(message);
+        URI requestUrl = buildRequestUrl(message);
         // Call Nexmo SMS API
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -53,19 +55,22 @@ public class NexmoMessagingClient implements MessagingClient {
         return response;
     }
 
-    private String buildRequestUrl(Message message) throws SimpleSmsException {
-        String url = null;
-        try {
-             url = NEXMO_SMS_API_URL +
-                    "?api_key=" + apiKey +
-                    "&api_secret=" + apiSecret +
-                    "&from=" + message.getSender() +
-                    "&to=" + message.getRecipient() +
-                    "&text=" + URLEncoder.encode(message.getBody(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new SimpleSmsException(SimpleSmsError.ERR_ENCODE);
-        }
-        return url;
+    private URI buildRequestUrl(Message message) throws SimpleSmsException {
+        UriTemplate template = new UriTemplate(NEXMO_SMS_API_URL +
+                "?api_key={api_key}" +
+                "&api_secret={api_secret}" +
+                "&from={from}" +
+                "&to={to}" +
+                "&text={text}");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("api_key", apiKey);
+        params.put("api_secret", apiSecret);
+        params.put("from", message.getSender());
+        params.put("to", message.getRecipient());
+        params.put("text", message.getBody());
+
+        return template.expand(params);
     }
 
     @Override
