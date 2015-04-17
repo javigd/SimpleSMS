@@ -19,8 +19,9 @@ public interface MessagingClient {
 
     /**
      * Get the delivery receipt of the latest sendMessage operation
+     * @param messageId
      * @return
      */
-    public DeliveryReceipt getDeliveryReceipt();
+    public DeliveryReceipt getDeliveryReceipt(String messageId) throws SimpleSmsException;
 
 }

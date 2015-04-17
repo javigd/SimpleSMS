@@ -8,18 +8,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DeliveryReceipt {
 
     private String destination;
-    @JsonProperty("network-code")
     private String networkCode;
     private String messageId;
     private String msisdn;
     private String status;
-    @JsonProperty("err-code")
     private String errorCode;
     private String price;
     private String scts;
-    @JsonProperty("message-timestamp")
     private String messageTimestamp;
-    @JsonProperty("client-ref")
     private String clientRef;
 
     public DeliveryReceipt() {
@@ -121,5 +117,21 @@ public class DeliveryReceipt {
 
     public void setClientRef(String clientRef) {
         this.clientRef = clientRef;
+    }
+
+    @Override
+    public String toString() {
+        return "DeliveryReceipt{" +
+                "destination='" + destination + '\'' +
+                ", networkCode='" + networkCode + '\'' +
+                ", messageId='" + messageId + '\'' +
+                ", msisdn='" + msisdn + '\'' +
+                ", status='" + status + '\'' +
+                ", errorCode='" + errorCode + '\'' +
+                ", price='" + price + '\'' +
+                ", scts='" + scts + '\'' +
+                ", messageTimestamp='" + messageTimestamp + '\'' +
+                ", clientRef='" + clientRef + '\'' +
+                '}';
     }
 }

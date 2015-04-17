@@ -13,9 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.javiagd.nexmo.simplesms.exceptions.SimpleSmsError;
 import com.javiagd.nexmo.simplesms.exceptions.SimpleSmsException;
 import com.javiagd.nexmo.simplesms.messaging.MessagingClient;
 import com.javiagd.nexmo.simplesms.messaging.NexmoMessagingClient;
+import com.javiagd.nexmo.simplesms.models.DeliveryReceipt;
 import com.javiagd.nexmo.simplesms.models.Message;
 import com.javiagd.nexmo.simplesms.models.Response;
 import com.javiagd.nexmo.simplesms.utils.ConfigManager;
@@ -25,6 +27,11 @@ public class MainActivity extends ActionBarActivity {
 
     private MessagingClient messagingClient;
     private ConfigManager config;
+
+    // Predefined Maximum delivery receipt requests
+    private final int MAX_DELIVERY_RECEIPT_REQUESTS = 5;
+    // Predefined time between requests in ms
+    private final int RECEIPT_REQUEST_FREQUENCY = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,40 +77,68 @@ public class MainActivity extends ActionBarActivity {
         new MessageTask().execute();
     }
 
-    // AsyncTask responsible for the Asynchronous Messaging
-    private class MessageTask extends AsyncTask<Void, Void, Response> {
+    /**
+     * AsyncTask responsible for the Asynchronous Messaging
+     */
+    private class MessageTask extends AsyncTask<Void, Response, DeliveryReceipt> {
 
         @Override
-        protected Response doInBackground(Void... params) {
+        protected void onPreExecute() {
+            Toast.makeText(getApplicationContext(), "Sending Message...",
+                    Toast.LENGTH_SHORT).show();
+        }
 
+        @Override
+        protected DeliveryReceipt doInBackground(Void... params) {
+
+            int reqCounter = 0;
             Response operationResults = null;
+            DeliveryReceipt deliveryReceipt = null;
 
             final EditText sender = (EditText) findViewById(R.id.from_edit_text);
             final EditText receptor = (EditText) findViewById(R.id.to_edit_text);
             final EditText message = (EditText) findViewById(R.id.message_body);
 
-            // Send the message
             try {
+                // Send the message and retrieve response
                 Message textMessage = new Message(sender.getText().toString(),
                         receptor.getText().toString(),
                         message.getText().toString());
                 operationResults = messagingClient.sendMessage(textMessage);
+                // Show response feedback to user
+                publishProgress(operationResults);
+                // Get delivery receipt
+                while (deliveryReceipt == null && reqCounter < MAX_DELIVERY_RECEIPT_REQUESTS) {
+                    deliveryReceipt = messagingClient.getDeliveryReceipt(operationResults.getMessageId());
+                    reqCounter++;
+                }
+                if(reqCounter == MAX_DELIVERY_RECEIPT_REQUESTS)
+                    throw new SimpleSmsException(SimpleSmsError.CALLBACK_COM);
             } catch (SimpleSmsException e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(),
                         Toast.LENGTH_LONG).show();
                 Log.e("MainActivity", e.getMessage(), e);
             }
-            return operationResults;
+
+            return deliveryReceipt;
         }
 
         @Override
-        protected void onPostExecute(Response response) {
-            // Show operation results
+        protected void onProgressUpdate(Response... response) {
+            //Update the user name and image
             TextView responseText = (TextView) findViewById(R.id.response_dyn_text);
             responseText.setText(response.toString());
+        }
+
+        @Override
+        protected void onPostExecute(DeliveryReceipt receipt) {
+            // Show operation results
+            TextView responseText = (TextView) findViewById(R.id.response_dyn_text);
+            responseText.setText(responseText.getText().toString() + "\n\n" + receipt.toString());
             // Re-enable button
             Button sendBtn = (Button) findViewById(R.id.send_button);
             sendBtn.setActivated(false);
         }
     }
+
 }

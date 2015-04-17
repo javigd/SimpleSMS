@@ -22,6 +22,7 @@ import java.util.Map;
 public class NexmoMessagingClient implements MessagingClient {
 
     private final static String NEXMO_SMS_API_URL = "https://rest.nexmo.com/sms/json";
+    private final static String CALLBACK_URL = "http://nexmosmsreceipt-javiagd.rhcloud.com/receipts/get";
 
     private static NexmoMessagingClient client;
 
@@ -74,8 +75,24 @@ public class NexmoMessagingClient implements MessagingClient {
     }
 
     @Override
-    public DeliveryReceipt getDeliveryReceipt() {
-        return null;
+    public DeliveryReceipt getDeliveryReceipt(String messageId) throws SimpleSmsException {
+        DeliveryReceipt deliveryReceipt = null;
+
+        UriTemplate template = new UriTemplate(CALLBACK_URL +
+                "?messageId={messageId}");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("messageId", messageId);
+
+        // Call our Callback URL with a running Rest Service in order to retrieve the receipt
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            deliveryReceipt = restTemplate.getForObject(template.expand(params), DeliveryReceipt.class);
+        } catch (RestClientException e) {
+            throw new SimpleSmsException(SimpleSmsError.CALLBACK_COM);
+        }
+        return deliveryReceipt;
     }
 
     public String getApiKey() {
