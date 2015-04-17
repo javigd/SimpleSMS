@@ -13,13 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.javiagd.nexmo.simplesms.exceptions.SimpleSmsError;
 import com.javiagd.nexmo.simplesms.exceptions.SimpleSmsException;
 import com.javiagd.nexmo.simplesms.messaging.MessagingClient;
 import com.javiagd.nexmo.simplesms.messaging.NexmoMessagingClient;
 import com.javiagd.nexmo.simplesms.models.DeliveryReceipt;
 import com.javiagd.nexmo.simplesms.models.Message;
 import com.javiagd.nexmo.simplesms.models.Response;
+import com.javiagd.nexmo.simplesms.models.ResponseMessage;
 import com.javiagd.nexmo.simplesms.utils.ConfigManager;
 
 
@@ -108,15 +108,20 @@ public class MainActivity extends ActionBarActivity {
                 // Show response feedback to user
                 publishProgress(operationResults);
                 // Get delivery receipt
-                while (deliveryReceipt == null && reqCounter < MAX_DELIVERY_RECEIPT_REQUESTS) {
-                    deliveryReceipt = messagingClient.getDeliveryReceipt(operationResults.getMessageId());
-                    reqCounter++;
+                for (ResponseMessage rm : operationResults.getMessages()) {
+                    while (deliveryReceipt == null && reqCounter < MAX_DELIVERY_RECEIPT_REQUESTS) {
+                        deliveryReceipt = messagingClient.getDeliveryReceipt(rm.getMessageId());
+                        reqCounter++;
+                        Thread.sleep(RECEIPT_REQUEST_FREQUENCY);
+                    }
                 }
-                if(reqCounter == MAX_DELIVERY_RECEIPT_REQUESTS)
-                    throw new SimpleSmsException(SimpleSmsError.CALLBACK_COM);
             } catch (SimpleSmsException e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(),
                         Toast.LENGTH_LONG).show();
+                Log.e("MainActivity", e.getMessage(), e);
+            } catch (InterruptedException e) {
+                Log.e("MainActivity", e.getMessage(), e);
+            } catch (NullPointerException e) {
                 Log.e("MainActivity", e.getMessage(), e);
             }
 
@@ -127,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
         protected void onProgressUpdate(Response... response) {
             //Update the user name and image
             TextView responseText = (TextView) findViewById(R.id.response_dyn_text);
-            responseText.setText(response.toString());
+            responseText.setText(response[0].toString());
         }
 
         @Override
