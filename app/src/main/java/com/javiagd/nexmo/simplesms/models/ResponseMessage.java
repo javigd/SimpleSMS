@@ -105,15 +105,13 @@ public class ResponseMessage {
 
     @Override
     public String toString() {
-        return "ResponseMessage{" +
-                "status='" + status + '\'' +
-                ", messageId='" + messageId + '\'' +
-                ", destination='" + destination + '\'' +
-                ", clientReference='" + clientReference + '\'' +
-                ", remainingBalance='" + remainingBalance + '\'' +
-                ", messagePrice='" + messagePrice + '\'' +
-                ", network='" + network + '\'' +
-                ", errorText='" + errorText + '\'' +
-                '}';
+        return "messageId: '" + messageId + '\'' +
+                "\n\tstatus: '" + status + '\'' +
+                "\n\tdestination: '" + destination + '\'' +
+                "\n\tclientReference: '" + clientReference + '\'' +
+                "\n\tremainingBalance: '" + remainingBalance + '\'' +
+                "\n\tmessagePrice: '" + messagePrice + '\'' +
+                "\n\tnetwork: '" + network + '\'' +
+                "\n\terrorText: '" + errorText + '\'';
     }
 }

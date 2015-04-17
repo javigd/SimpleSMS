@@ -121,17 +121,17 @@ public class DeliveryReceipt {
 
     @Override
     public String toString() {
-        return "DeliveryReceipt{" +
-                "destination='" + destination + '\'' +
-                ", networkCode='" + networkCode + '\'' +
-                ", messageId='" + messageId + '\'' +
-                ", msisdn='" + msisdn + '\'' +
-                ", status='" + status + '\'' +
-                ", errorCode='" + errorCode + '\'' +
-                ", price='" + price + '\'' +
-                ", scts='" + scts + '\'' +
-                ", messageTimestamp='" + messageTimestamp + '\'' +
-                ", clientRef='" + clientRef + '\'' +
-                '}';
+        return "\nDelivery Receipt from Nexmo:" +
+                "\n\tmessageId: '" + messageId +
+                "\n\tdestination: '" + destination +
+                "\n\tnetworkCode: '" + networkCode +
+                "\n\tmessageId: '" + messageId +
+                "\n\tmsisdn: '" + msisdn +
+                "\n\tstatus: '" + status +
+                "\n\terrorCode: '" + errorCode +
+                "\n\tprice: '" + price +
+                "\n\tscts: '" + scts +
+                "\n\tmessageTimestamp: '" + messageTimestamp +
+                "\n\tclientRef: '" + clientRef;
     }
 }

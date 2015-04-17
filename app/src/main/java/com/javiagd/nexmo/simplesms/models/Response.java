@@ -40,9 +40,8 @@ public class Response {
 
     @Override
     public String toString() {
-        return "Response{" +
-                "messageCount='" + messageCount + '\'' +
-                ", messages=" + messages.toString() +
-                '}';
+        return "Response from Nexmo:\n" +
+                "Message delivered in '" + messageCount + " parts.\n" +
+                "\nInformation about your delivered message(s):\n" + messages.toString();
     }
 }
