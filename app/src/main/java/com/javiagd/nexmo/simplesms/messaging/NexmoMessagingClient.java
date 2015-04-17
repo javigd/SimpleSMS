@@ -22,7 +22,7 @@ import java.util.Map;
 public class NexmoMessagingClient implements MessagingClient {
 
     private final static String NEXMO_SMS_API_URL = "https://rest.nexmo.com/sms/json";
-    private final static String CALLBACK_URL = "http://nexmosmsreceipt-javiagd.rhcloud.com/receipts/get";
+    private final static String CALLBACK_URL = "http://nexmosmsreceipt-javiagd.rhcloud.com/nexmo/get";
 
     private static NexmoMessagingClient client;
 
